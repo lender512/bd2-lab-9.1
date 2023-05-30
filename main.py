@@ -26,4 +26,19 @@ for r in [0.8, 1.5, 2.6]:
 
         ls.append(experiment(qn, r))
     ndf.loc[r] = ls
-ndf
+print(ndf)
+
+def knn_search(q, k):
+    return df.iloc[df.apply(lambda p: dist(q,p), axis=1).sort_values().index[:k]]
+
+ndf = pd.DataFrame(columns=['q15', 'q82', 'q121'])
+
+for k in [2, 4, 8, 16, 32]:
+    ls = []
+    for qn in [15, 82, 121]:
+        q = df.iloc[qn]
+        result = knn_search(q, k)
+        pr = result[result.variety == q.variety].shape[0] / result.shape[0]
+        ls.append(pr)
+    ndf.loc[k] = ls
+print(ndf)
